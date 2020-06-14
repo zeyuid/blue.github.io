@@ -1,0 +1,226 @@
+
+
+
+
+
+
+  
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>浙江大学通行码</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="./css/main.css?v=1.1" />
+</head>
+
+<script src="./js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="./js/jquery.qrcode.min.js?v=1"></script>
+
+
+<script>setTimeout("location=location; ", (24*3600*1000)*3); </script>
+<script>
+    function format(time, format) {
+    var t = new Date(time);
+    var tf = function (i) {
+      return (i < 10 ? '0' : '') + i
+    };
+    return format.replace(/yyyy|MM|dd|HH|mm|ss/g, function (a) {
+      switch (a) {
+        case 'yyyy':
+          return tf(t.getFullYear());
+          break;
+        case 'MM':
+          return tf(t.getMonth() + 1);
+          break;
+        case 'mm':
+          return tf(t.getMinutes());
+          break;
+        case 'dd':
+          return tf(t.getDate());
+          break;
+        case 'HH':
+          return tf(t.getHours());
+          break;
+        case 'ss':
+          return tf(t.getSeconds());
+          break;
+      }
+    })
+  }
+    jQuery(function(){
+
+        var colour = 'CCCCCC';
+        var flag = 'Invalid';
+        if(null == colour || "" == colour){
+            colour = "CCCCCC";
+        }
+
+
+        var mzt='';
+        var dateTime='';
+        var array=getJkm();
+        if(true){
+            mzt = 'green';
+            var myDate = new Date();
+            var mytime=format(myDate, 'yyyy-MM-dd HH:mm:ss'); 
+            mydate = format(myDate, 'yyyy-MM-dd');
+            dateTime = mytime;
+        }
+        if(mzt!='green'){
+            colour = "CCCCCC";
+        }
+        if(mzt=='green'){
+            $("#hzjkm").append('<div  class="hz" style="color: #55b957">健康码为 绿码</div>');
+        }
+        if(mzt=='yellow'){
+            $("#hzjkm").append('<div  class="hz" style="color: #ee8232">健康码为 黄码</div>');
+        }
+        if(mzt=='red'){
+            $("#hzjkm").append('<div class="hz" style="color: #e8453b">健康码为 红码</div>');
+        }
+
+        if(mzt=='orange'){
+            $("#hzjkm").append('<div class="hz" style="color: #FFA500">健康码为 橙码</div>');
+        }
+        if(mzt==''){
+            colour = "1E90FF";
+            $("#hzjkm").append('<div class="hz" style="color: #006bc7">健康码获取失败（请打开支付宝出示）</div>');
+        }
+        if(mzt=='' && flag== 'Invalid'){
+            colour = "CCCCCC";
+        }
+        if(dateTime!=''){
+            $("#dateTime").append('<div class="time">同步时间：'+dateTime+'</div>');
+            $("#validtime").append('<div class="time">有效期：'+mydate+' - '+mydate+'</div>')
+        }
+
+        // 已删除
+        if(''  == '1'){
+            colour='CCCCCC';
+        }
+        // 核酸检测为是
+        if('否'  == '是'){
+            colour='EB6E18';
+        }
+
+        var account='08001811';
+        jQuery('#output').qrcode({
+            render  : "table",
+            width: 180,
+            height: 180,
+            text    : 'jT6tmuodGq'+'737e7e158783216b5fb44d43e4469501'+'737e7e158783216b5fb44d43e4469501',
+            render: "canvas", //也可以替换为table
+            foreground: "#1E90FF",
+            background: "#FFF",
+
+        });
+    })
+
+    function getJkm() {
+        var datas = '';
+        $.ajax({
+            type : "GET",
+            url : "/pass_code/jkm?account=11910081&cardNo=441827199706086211&identity=3",
+            async : false,
+            dataType:'json',
+            success : function(data) {
+                datas=data;
+            }
+        });
+        return datas;
+    }
+
+    if(true){
+        //获取系统时间
+        function showTime() {
+            nowtime = new Date();
+            year = nowtime.getFullYear();//年
+            month = nowtime.getMonth() + 1;//月
+            day = nowtime.getDate();//日
+            hour = nowtime.getHours();//时
+            minutes = nowtime.getMinutes(); //分
+            seconds = nowtime.getSeconds(); //秒
+            //文字增加空格
+            document.getElementById("div_timer").style = "white-space:pre;";
+            //显示时间
+            document.getElementById("div_timer").innerText = p(month) + "月" + p(day) + "日 " + p(hour) + ":" + p(minutes) + ":" + p(seconds);
+        }
+        setInterval("showTime()", 1000);
+        //月日时分秒小于10补0
+        function p(s) {
+            return s < 10 ? '0' + s : s;
+        }
+    }
+
+</script>
+
+
+
+<body class="blue-bg">
+<div class="banner"><img src="./images/text.png"></div>
+
+
+
+
+<div class="content-box">
+    <div class="top-title">
+        <h3>杨泽域的通行码</h3>
+        
+
+            <span  class="bgr-blue">研究生</span>
+            
+
+        
+
+
+    </div>
+    
+        <strong><div class="time2" id="div_timer"></div></strong>
+    
+    <div class="qr">
+        
+            <div id="output" style="margin-top: 10px;margin-bottom: 10px"></div>
+        
+        
+        
+        
+
+        
+    </div>
+    
+        
+            <div id='validtime'></div>
+        
+    
+
+
+
+    <div id="hzjkm"></div>
+
+
+    <div id="dateTime"></div>
+    
+        <p class="tip" style="margin-top: 10px;">凭蓝码可在浙江大学校园内通行<br>请主动出示，配合检查</p>
+    
+    
+    <div style="text-align:center; margin-top: 10px">
+        <a target="_blank" href="http://one.zju.edu.cn/taskcenter/wechat/index" >办事大厅</a>&nbsp;&nbsp;&nbsp;
+        <a target="_blank" href="/pass_code/zx/getList" >申请记录</a>&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+    </div>
+</div>
+<div class="bottom-tip">
+    <h3>安 保 处 ：0571-88206110</h3>
+    <a href="http://xwfw.zju.edu.cn/mobile/redir.php?catalog_id=371039" target="_blank" class="link-btn">常见问题</a>
+    <h3>技术支持：0571-87951669</h3>
+</div>
+</body>
+</html>
